@@ -35,7 +35,7 @@ This code calls `bico()`, the factory for creating codecs, tells it
 2. to create an encoder (string-to-binary) named `bico.fromHex`, 
 3. to create a decoder (binary-to-string) named `bico.toHex`, 
 4. that the 16 characters `'012345679abcdef'` represent the values 0&ndash;16, and 
-5. that each character represents 4 bits.
+5. that 4 bits generate one character.
 
 ### Encoder (string-to-binary)
 
