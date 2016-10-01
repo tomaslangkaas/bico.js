@@ -13,7 +13,7 @@ var messageAsBase64 =  bico.toBase64(bico.fromString(messageString));
 //  messageAsBase64 == 'Zm9vYmE='
 ```
 
-## Build your own encoders and decoders
+## Build encoders and decoders
 
 `bico-base.js` contains the base functionality for building encoders and decoders, in less than 0.7 kb (minified).
 
@@ -22,6 +22,8 @@ var messageAsBase64 =  bico.toBase64(bico.fromString(messageString));
 `bico.js` includes the base functionality in addition to encoders and decoders for `hex`, `ascii`, `unicode`, `base64` and `Z85` strings, in less than 1.7 kb (minified).
 
 ## Basic usage
+
+### Building a codec
 
 The following code illustrates how to build a simple (case-sensitive) `hex` codec:
 ```javascript
@@ -35,4 +37,23 @@ This code calls `bico()`, the factory for creating codecs, tells it
 4. that the 16 characters `'012345679abcdef'` represent the values 0&ndash;16, and 
 5. that each character represents 4 bits.
 
+### Encoder (string-to-binary)
+
 The resulting encoder, `bico.fromHex(hexString[, wordSize][, flush][, outputArray])`, takes 1 to 4 arguments:
+
+1. A `hexString` to be encoded. Unknown characters are ignored (such as uppercase A&ndash;F).
+2. An optional `wordSize` (1&ndash;32 bits) for the output array, defaults to `8`, if falsy.
+3. A boolean value, `flush` indicating whether bits left in the buffer should be output at the end. Defaults to `false`.
+4. An optional `outputArray` to use for output.
+
+The encoder returns array with integer values (as signed integers, convert to unsigned with `>>> 0` in consuming code, if required).
+
+### Decoder (binary-to-string)
+
+The resulting decoder, `bico.toHex(binArray[, wordSize][, flush])`, takes 1 to 3 arguments:
+
+1. A `binArray` to be decoded.
+2. A `wordSize` (1&ndash;32 bits) indicating the `wordSize` of `binArray`, defaults to `8`, if falsy.
+3. A boolean value, `flush` indicating whether bits left in the buffer should be output at the end. Defaults to `false`.
+
+The decoder returns a `hex` string.
