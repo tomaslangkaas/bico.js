@@ -15,11 +15,11 @@ var messageAsBase64 =  bico.toBase64(bico.fromString(messageString));
 
 ## Build encoders and decoders
 
-`bico-base.js` contains the base functionality for building encoders and decoders, in less than 0.7 kb (minified).
+`bico-base.js` contains the base functionality for building encoders and decoders, in ~0.6 kb (minified).
 
 ## Use existing encoders and decoders
 
-`bico.js` includes the base functionality in addition to encoders and decoders for `hex`, `ascii`, `unicode`, `base64` and `Z85` strings, in less than 1.7 kb (minified).
+`bico.js` includes the base functionality in addition to encoders and decoders for `hex`, `ascii`, `unicode`, `base64` and `Z85` strings, in ~1.6 kb (minified).
 
 ## Basic usage
 
