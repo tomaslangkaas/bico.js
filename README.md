@@ -43,7 +43,7 @@ The resulting encoder, `bico.fromHex(hexString[, wordSize][, flush][, outputArra
 
 1. A `hexString` to be encoded. Unknown characters are ignored (such as uppercase A&ndash;F).
 2. An optional `wordSize` (1&ndash;32 bits) for the output array, defaults to `8`, if falsy.
-3. A boolean value, `flush` indicating whether bits left in the buffer should be output at the end. Defaults to `false`.
+3. A boolean value, `flush`, indicating whether bits left in the buffer should be output at the end. Defaults to `false`.
 4. An optional `outputArray` to use for output.
 
 The encoder returns array with integer values (as signed integers, convert to unsigned with `>>> 0` in consuming code, if required).
@@ -54,6 +54,6 @@ The resulting decoder, `bico.toHex(binArray[, wordSize][, flush])`, takes 1 to 3
 
 1. A `binArray` to be decoded.
 2. A `wordSize` (1&ndash;32 bits) indicating the `wordSize` of `binArray`, defaults to `8`, if falsy.
-3. A boolean value, `flush` indicating whether bits left in the buffer should be output at the end. Defaults to `false`.
+3. A boolean value, `flush`, indicating whether bits left in the buffer should be output at the end. Defaults to `false`.
 
 The decoder returns a `hex` string.
