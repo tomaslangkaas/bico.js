@@ -11,6 +11,9 @@ var byteValues =  bico.fromHex(hexString);
 var messageString   =  'fooba';
 var messageAsBase64 =  bico.toBase64(bico.fromString(messageString));
 //  messageAsBase64 == 'Zm9vYmE='
+
+var bit5Values =  bico.fromHex('ABCDEF5678', 5);
+//  bit5Values == [21, 15, 6, 30, 30, 21, 19, 24]
 ```
 
 ## Build encoders and decoders
@@ -29,12 +32,12 @@ The following code illustrates how to build a simple (case-sensitive) `hex` code
 ```javascript
 bico(bico, 'fromHex', 'toHex', '0123456789abcdef', 4);
 ```
-This code calls `bico()`, the factory for creating codecs, tells it 
+This code calls `bico()`, the codec factory, and tells it 
 
 1. to use `bico` as the codec namespace, 
 2. to create an encoder (string-to-binary) named `bico.fromHex`, 
 3. to create a decoder (binary-to-string) named `bico.toHex`, 
-4. that the 16 characters `'012345679abcdef'` represent the values 0&ndash;16, and 
+4. that the 16 characters `'012345679abcdef'` represent the values 0&ndash;15, and 
 5. that 4 bits generate one character.
 
 ### Encoder (string-to-binary)
@@ -57,3 +60,7 @@ The resulting decoder, `bico.toHex(binArray[, wordSize][, flush])`, takes 1 to 3
 3. A boolean value, `flush`, indicating whether bits left in the buffer should be output at the end. Defaults to `false`.
 
 The decoder returns a `hex` string.
+
+## Advanced use
+
+
