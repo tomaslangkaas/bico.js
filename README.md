@@ -9,7 +9,9 @@ var byteValues =  bico.fromHex(hexString);
 //  byteValues == [0xf5, 0xf8, 0x34, 0x12, 0x45, 0xaf, 0xf9, 0xcd]
 
 var messageString   =  'fooba';
-var messageAsBase64 =  bico.toBase64(bico.fromString(messageString));
+var messageAsBase64 =  bico.toBase64(
+                        bico.fromAscii(messageString)
+                       );
 //  messageAsBase64 == 'Zm9vYmE='
 
 var bit5Values =  bico.fromHex('ABCDEF5678', 5);
@@ -42,9 +44,9 @@ This code calls `bico()`, the codec factory, and tells it
 
 ### Encoder (string-to-binary)
 
-The resulting encoder, `bico.fromHex(hexString[, wordSize][, flush][, outputArray])`, takes 1 to 4 arguments:
+The resulting encoder, `bico.fromHex(binString[, wordSize][, flush][, outputArray])`, takes 1 to 4 arguments:
 
-1. A `hexString` to be encoded. Unknown characters are ignored (such as uppercase A&ndash;F).
+1. A `binString` to be encoded. Unknown characters are ignored (such as uppercase A&ndash;F).
 2. An optional `wordSize` in bits (1&ndash;32) for the output array, defaults to `8`, if falsy.
 3. A boolean value, `flush`, indicating whether bits left in the buffer should be output at the end. Defaults to `false`.
 4. An optional `outputArray` to use for output.
@@ -59,8 +61,19 @@ The resulting decoder, `bico.toHex(binArray[, wordSize][, flush])`, takes 1 to 3
 2. A `wordSize` in bits (1&ndash;32) indicating the `wordSize` of `binArray`, defaults to `8`, if falsy.
 3. A boolean value, `flush`, indicating whether bits left in the buffer should be output at the end. Defaults to `false`.
 
-The decoder returns a `hex` string.
+The decoder returns a string (as hex).
 
 ## Advanced use
 
+### Wrap encoders/decoders in preprocessing or postprocessing functions
+
+One way to make a case-insensitive `hex` encoder, is to preprocess the string (make it lower case) before encoding. The following code illustrates this, naming the case-sensitive encoder `_fromHex`, then creating a preprocessing wrapper function named `fromHex`:
+
+```javascript
+bico(bico, '_fromHex', 'toHex', '0123456789abcdef', 4);
+
+bico.fromHex = function (binString, wordSize, flush) {
+  return bico._fromHex(binString.toLowerCase(), wordSize, flush);
+}
+```
 
