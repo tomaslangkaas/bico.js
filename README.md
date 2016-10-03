@@ -26,7 +26,7 @@ var bit5Values =  bico.fromHex('ABCDEF5678', 5);
 
 `bico.js` includes the base functionality in addition to encoders and decoders for `hex`, `ascii`, `unicode`, `base64` and `Z85` strings, in ~1.6 kb (minified).
 
-## Basic usage
+## Basic use
 
 ### Building a codec
 
@@ -64,6 +64,35 @@ The resulting decoder, `bico.toHex(binArray[, wordSize][, flush])`, takes 1 to 3
 The decoder returns a string (as hex).
 
 ## Advanced use
+
+The codec factory function, 
+
+```javascript
+bico(namespace, encoderName, decoderName, symbols,
+     bitsPerWrite[, customEncoder][, customDecoder])
+```
+
+has two optional arguments, `customEncoder` and `customDecoder`. A bico encoder loops through each character in the input string, checking the charcode against a lookup table built from the `symbols` string. Using a `customEncoder` overrides this. A `customEncoder` is a function that is called for each character in the input string, it is expected to test if the charcode is valid, if so, append bits to the bit buffer and return the number of bits appended. The `customEncoder` is always called with three arguments, the current `charcode`, the current encoder `state`, array and the charcode `lookup` table. The encoder `state` is an array with three values: `[bufferAsInteger, bitsInBuffer, validCharactersRead]`. The `lookup` table is an object with valid symbol charcodes as keys, and corresponding symbol values incremented by one (to ease lookup of symbols with value `0`).
+
+A bico decoder loops through each value in the input array and appends it to the buffer. While there are at least as many bits in the buffer as `bitsPerWrite`, this number of bits is extracted from the buffer, and the symbol corresponding to this value is appended to the output string. This could be overriden by a `customDecoder` function, which takes two arguments, a bit value of `bitsPerWrite`  
+ bits, and an array of symbol strings, where `symbols[n]` correspond to the symbol with value `n`.
+ 
+A simple ASCII codec could look like this (simply returning the lower 8 bits of any charcode provided):
+
+```javascript
+bico(bico, 'fromAscii', 'toAscii',
+  '', //empty list of symbols 
+  8,
+  function(charcode, state, lookup) {
+    //append charcode to buffer
+    state[0] = state[0] << 8 ^ charcode;
+    //return number of bits appended
+    return 8;
+  },
+  function(value, symbols) {
+    return String.fromCharCode(value);
+  });
+```
 
 ### Wrap encoders/decoders in preprocessing or postprocessing functions
 
