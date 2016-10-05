@@ -18,11 +18,13 @@ var bit5Values =  bico.fromHex('ABCDEF5678', 5);
 //  bit5Values == [21, 15, 6, 30, 30, 21, 19, 24]
 ```
 
-## Build encoders and decoders
+## Which source file to choose
 
-`bico-base.js` contains the base functionality for building encoders and decoders, in ~0.6 kb (minified).
+### To just build encoders and decoders
 
-## Use existing encoders and decoders
+`bico-base.js` contains the base functionality for building encoders and decoders, in ~0.7 kb (minified).
+
+## To also use existing encoders and decoders
 
 `bico.js` includes the base functionality in addition to encoders and decoders for `hex`, `ascii`, `unicode`, `base64` and `Z85` strings, in ~1.6 kb (minified).
 
