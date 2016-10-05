@@ -36,12 +36,12 @@ The following code illustrates how to build a simple (case-sensitive) `hex` code
 ```javascript
 bico(bico, 'fromHex', 'toHex', '0123456789abcdef', 4);
 ```
-This code calls `bico()`, the codec factory, and tells it 
+This code calls `bico()`, the codec factory, and tells it
 
-1. to use `bico` as the codec namespace, 
-2. to create an encoder (string-to-binary) named `bico.fromHex`, 
-3. to create a decoder (binary-to-string) named `bico.toHex`, 
-4. that the 16 characters `'012345679abcdef'` represent the values 0&ndash;15, and 
+1. to use `bico` as the codec namespace,
+2. to create an encoder (string-to-binary) named `bico.fromHex`,
+3. to create a decoder (binary-to-string) named `bico.toHex`,
+4. that the 16 characters `'012345679abcdef'` represent the values 0&ndash;15, and
 5. that 4 bits generate one character.
 
 ### Encoder (string-to-binary)
@@ -69,7 +69,7 @@ The decoder returns a string (as hex).
 
 ### Custom encoders and custom decoders
 
-The codec factory function, 
+The codec factory function,
 
 ```javascript
 bico(namespace, encoderName, decoderName, symbols,
@@ -79,12 +79,12 @@ bico(namespace, encoderName, decoderName, symbols,
 has two optional arguments, `customEncoder` and `customDecoder`. A bico encoder loops through each character in the input string, checking the charcode against a lookup table built from the `symbols` string. A `customEncoder` can override this. A `customEncoder` is a function that is called for each character in the input string, it is expected to test if the charcode is valid, if so, append bits to the bit buffer and return the number of bits appended. The `customEncoder` is always called with three arguments, the current `charcode`, the current encoder `state` array and the charcode `lookup` table. The encoder `state` is an array with three values: `[bufferAsInteger, bitsInBuffer, validCharactersRead]`. The `lookup` table is an object with valid symbol charcodes as keys, and corresponding symbol values incremented by one (to ease lookup of symbols with value `0`).
 
 A bico decoder loops through each value in the input array and appends it to the buffer. While there are at least as many bits in the buffer as `bitsPerWrite`, this number of bits is extracted from the buffer, and the symbol corresponding to this value is appended to the output string. This could be overriden by a `customDecoder` function, which takes two arguments, a bit value of `bitsPerWrite` bits, and an array of symbol strings, where `symbols[n]` correspond to the symbol with value `n`.
- 
+
 A simple ASCII codec could look like this (simply returning the lower 8 bits of any charcode provided):
 
 ```javascript
 bico(bico, 'fromAscii', 'toAscii',
-  '', //empty list of symbols 
+  '', //empty list of symbols
   8,
   function(charcode, state, lookup) {
     //append charcode to buffer
@@ -97,7 +97,7 @@ bico(bico, 'fromAscii', 'toAscii',
   });
 ```
 
-### Wrap encoders/decoders in preprocessing or postprocessing functions
+### Preprocessing and postprocessing functions
 
 One way to make a case-insensitive `hex` encoder, is to preprocess the string (make it lower case) before encoding. The following code illustrates this, naming the case-sensitive encoder `_fromHex`, then creating a preprocessing wrapper function named `fromHex`:
 
