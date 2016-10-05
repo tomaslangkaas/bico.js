@@ -4,7 +4,7 @@ function bico(namespace, AtoB, BtoA,
     i;
   for (i = 0; i < symbols.length; i++) {
     //charcode values are stored as (value + 1) to
-    //allow falsy lookup to indicate no match, 
+    //allow falsy lookup to indicate no match,
     //if (value = lookup[charcode]) {value = value - 1;}
     lookup[symbols.charCodeAt(i)] = i + 1;
   }
@@ -18,10 +18,10 @@ function bico(namespace, AtoB, BtoA,
   writer = writer || function(value, symbols) {
     return symbols[value];
   }
-  namespace[AtoB] = function(str, outSize, flush, output) {
+  namespace[AtoB] = function(str, outSize, flush, output, callback) {
     output = output || [];
     outSize = outSize || 8; //defaults to 8 bits
-    var state = [0, 0, 0], //[buffer, bits, chars]
+    var state = [0, 0, 0, 0], //[buffer, bufferBits, charsRead, bitsOutput]
       pos,
       outlen, strlen = str.length,
       newBits,
@@ -30,7 +30,10 @@ function bico(namespace, AtoB, BtoA,
     for (outlen = pos = 0; pos < strlen; pos++) {
       if (newBits = reader(str.charCodeAt(pos), state, lookup)) {
         state[2]++;
-        for (state[1] += newBits; state[1] >= outSize; state[0] &= (1 << state[1]) - 1) {
+        for (state[1] += newBits, state[3] += newBits;
+          state[1] >= outSize;
+          state[0] &= (1 << state[1]) - 1
+        ) {
           output[outlen++] = ((state[0] >>> (state[1] -= outSize)) & mask);
         }
       }
@@ -38,7 +41,7 @@ function bico(namespace, AtoB, BtoA,
     if (flush && state[1]) {
       output[outlen] = state[0] << (outSize - state[1]);
     }
-    return output;
+    return callback ? callback(output, state) : output;
   }
   namespace[BtoA] = function(arr, inSize, flush) {
     inSize = inSize || 8; //defaults to 8 bit words
@@ -51,7 +54,10 @@ function bico(namespace, AtoB, BtoA,
       factor = Math.pow(2, inSize);
     for (i = 0; i < len; i++) {
       buffer = buffer * factor + (arr[i] >>> 0);
-      for (bufferSize += inSize; bufferSize >= bitsPerWrite; bufferSize -= bitsPerWrite) {
+      for (bufferSize += inSize;
+        bufferSize >= bitsPerWrite;
+        bufferSize -= bitsPerWrite
+      ) {
         offsetFactor = Math.pow(2, bufferSize - bitsPerWrite);
         str += writer(((buffer / offsetFactor) & mask) >>> 0, symbols);
         buffer %= offsetFactor;
