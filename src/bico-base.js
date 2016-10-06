@@ -30,9 +30,10 @@ function bico(namespace, AtoB, BtoA,
     for (outlen = pos = 0; pos < strlen; pos++) {
       if (newBits = reader(str.charCodeAt(pos), state, lookup)) {
         state[2]++;
-        for (state[1] += newBits, state[3] += newBits;
+        for (state[1] += newBits;
           state[1] >= outSize;
-          state[0] &= (1 << state[1]) - 1
+          state[0] &= (1 << state[1]) - 1,
+          state[3] += outSize
         ) {
           output[outlen++] = ((state[0] >>> (state[1] -= outSize)) & mask);
         }
